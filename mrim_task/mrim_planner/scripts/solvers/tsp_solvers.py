@@ -268,13 +268,38 @@ class TSPSolver3D():
             # Prepare positions of the viewpoints in the world
             positions = np.array([vp.pose.point.asList() for vp in viewpoints])
 
-            raise NotImplementedError('[STUDENTS TODO] KMeans clustering of viewpoints not implemented. You have to finish it on your own')
+            kmeans = KMeans(n_clusters=2, random_state=0)
+            kmeans.fit(positions)
+
+            # raise NotImplementedError('[STUDENTS TODO] KMeans clustering of viewpoints not implemented. You have to finish it on your own')
             # Tips:
             #  - utilize sklearn.cluster.KMeans implementation (https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
             #  - after finding the labels, you may want to swap the classes (e.g., by looking at the distance of the UAVs from the cluster centers)
 
             # TODO: fill 1D list 'labels' of size len(viewpoints) with indices of the robots
-            labels = [randint(0, k - 1) for vp in viewpoints]
+            # labels = [randint(0, k - 1) for vp in viewpoints]
+
+
+            # Check distance between
+            uav_0_startingPose = Pose(problem.start_poses[0].position.x, problem.start_poses[0].position.y, problem.start_poses[0].position.z, problem.start_poses[0].heading)
+            cluster_0_cp = Pose(kmeans.cluster_centers_[0][0], kmeans.cluster_centers_[0][1], kmeans.cluster_centers_[0][2], 0.0)
+            cluster_1_cp = Pose(kmeans.cluster_centers_[1][0], kmeans.cluster_centers_[1][1], kmeans.cluster_centers_[1][2], 0.0)
+
+            distToCluster0 = distEuclidean(uav_0_startingPose, cluster_0_cp)
+            distToCluster1 = distEuclidean(uav_0_startingPose, cluster_1_cp)
+
+            swapList = []
+            if distToCluster0 < distToCluster1:
+                swapList = kmeans.labels_
+            else:
+                for n in kmeans.labels_:
+                    if n == 0:
+                        swapList.append(1)
+                    else:
+                        swapList.append(0)
+
+            labels = swapList
+
 
         ## | -------------------- Random clustering ------------------- |
         else:
