@@ -1,0 +1,4 @@
+!**/__pycache__/
+/__pycache__/**
+/mrim_task/mrim_planner/scripts/__pycache__/*
+mrim_task/mrim_manager/scripts/mrim_manager/__pycache__/task_monitor.cpython-38.pyc
